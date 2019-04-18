@@ -1,29 +1,60 @@
+// All the NPM Package Stuff
 const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
-
+const handlebars = require("express-handlebars");
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-// const db = require("./models");
+// Require The Models
+const Models = require("./models");
 
-const PORT = 3003;
+// Port
+const PORT = process.env.PORT || 3003;
 
+// Initialize Express
 const app = express();
+
+// Get the handlebars up
+app.engine("handlebars", handlebars({ defaultLayout: "main"}));
+app.set("view engine", "handlebars");
 
 // Use morgan logger for logging requests
 app.use(logger("dev"));
+
 // Parse request body as JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 // Make public a static folder
 app.use(express.static("public"));
 
-axios.get("https://deadspin.com/").then(function(data){
 
-    const $ = cheerio.load(data.data);
 
-    $("article.postlist__item").each(function(element){
+const database = process.env.MONGODB_URI || "mongodb://localhost/deadHeadlines"
+
+mongoose.connect(database, function(error) {
+    if (error) {
+        console.log(error);
+    }
+    else {
+        console.log("mongoose is running");
+    }
+})
+
+app.listen(PORT, function(){
+    console.log("Listening on PORT: " + PORT)
+})
+
+
+
+
+app.get("/scrape", function(req, res) {
+    axios.get("https://deadspin.com/").then(function(data){
+
+        const $ = cheerio.load(data.data);
+
+        $("article.postlist__item").each(function(element){
 
         const result = {};
 
@@ -32,16 +63,8 @@ axios.get("https://deadspin.com/").then(function(data){
         result.summary = $(this).find("p").text()
 
         console.log(result)
-        // db.Article.create(result)
-        // .then(dbArticle => {
-        //     console.log(dbArticle);
-        // })
-        // .catch(err =>{
-        //     console.log(err);
-        // });
+        
     });
-})
-
-app.listen(3003, function(){
-    console.log("Listening on PORT " + 3003)
-})
+    
+});
+});
