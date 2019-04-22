@@ -90,6 +90,22 @@ app.get("/scrape", function(req, res) {
 });
 // ------------------------------------------
 
+// GOOd Leave Alone
+app.get("/saved", (req, res) => {
+    db.Article.find({isSaved: true})
+        .then(function (retrievedArticles) {
+            let hbsObject;
+            hbsObject = {
+                articles: retrievedArticles
+            };
+            res.render("savedArticles", hbsObject);
+        })
+        .catch(function (err) {
+            res.json(err);
+        });
+});
+// ====-----=====---=--=-=====---=-=
+
 
 app.get("/articles/:id", function(req, res) {
     db.Article.findOne({_id: req.params.id}).populate("note").then(function(data){
@@ -104,7 +120,7 @@ app.post("/note/:id", function(req, res) {
     db.Note.create(req.body).then(function(dbNote) {
         return db.Article.findOneAndUpdate({_id: req.params.id}, {$push: {note: dbNote._id}}, { new: true });  
     }).then(function(dbArticle) {
-        res.json(dbArticle);
+        res.json(dbNote);
     }).catch(function(err){
         res.json(err);
     })
@@ -128,21 +144,7 @@ app.delete("/articles", function(req, res) {
     })
 });
 
-// GOOd Leave Alone
-app.get("/saved", (req, res) => {
-    db.Article.find({isSaved: true})
-        .then(function (retrievedArticles) {
-            let hbsObject;
-            hbsObject = {
-                articles: retrievedArticles
-            };
-            res.render("savedArticles", hbsObject);
-        })
-        .catch(function (err) {
-            res.json(err);
-        });
-});
-// ====-----=====---=--=-=====---=-=
+
 
 app.get("/articles", function (req, res) {
     db.Article.find({})
