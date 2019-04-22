@@ -18,15 +18,15 @@ $(document).ready(function(){
             location.reload();
         })
     });
-// not working
+// working motherfucker, it fucking works.  Finally.
     $(document).on("click", ".delete-btn", function() {
         event.preventDefault();
         const id = $(this).attr("data");
         console.log(id)
-        $.ajax({
-            method: "PUT",
-            url: "/delete/" + id
-        }).done(function() {
+        $.ajax(`/remove/${id}`, {
+            type: "PUT",
+            
+        }).then(function() {
             location.reload();
         })
     });
@@ -34,17 +34,26 @@ $(document).ready(function(){
 // definately not working 
     $(document).on("click", ".note-btn", function(){
         let id = $(this).attr("data");
-        console.log("I hit the note button")
-        $("#save-note").attr("data-id", id);
-        $ajax({
-            url: "/articles/" + id,
+        console.log("I hit the note button: " + id)
+        $('#article-id').text(id);
+        $('#save-note').attr('data', id);
+        $.ajax(`/articles/${id}`, {
             type: "GET"
-        }).then(function(re) {
-            console.log(res);
-            $("#note-input").text(res.note.body);
-            M.updateTextFiled();
+        }).then(function (data) {
+            console.log(data)
+            $('.articles-available').empty();
+            if (data[0].note.length > 0){
+                data[0].note.forEach(v => {
+                    $('.articles-available').append($(`<li class='list-group-item'>${v.text}<button type='button' class='btn btn-danger btn-sm float-right btn-deletenote' data='${v._id}'>X</button></li>`));
+                })
+            }
+            else {
+                $('.articles-available').append($(`<li class='list-group-item'>No notes for this article yet</li>`));
+                console.log("Second ran!")
+            }
         })
-    })
+        $('#note-modal').modal('toggle');
+    });
 
 // I can't get the modal to even fucking pop
     $(document).on("click", "#save-note", function(){
@@ -60,25 +69,18 @@ $(document).ready(function(){
         })
     })
 
-    $(document).on("click", ".save-btn", function() {
-        event.preventDefault();
-        const button = $(this);
-        const id = button.attr("id");
-        $.ajax(`/save/${id}`, {
-            type: "PUT"
-        }).then(function() {
-            button.text("Article Saved");
-        })
-    })
+    // $(document).on("click", ".save-btn", function() {
+    //     event.preventDefault();
+    //     const button = $(this);
+    //     const id = button.attr("id");
+    //     $.ajax(`/save/${id}`, {
+    //         type: "PUT"
+    //     }).then(function() {
+    //         button.text("Article Saved");
+    //     })
+    // })
    
    
-
-
-
-
-    
-
-
     // // $('.btn-deletenote').click(function (event) {})
     // $(document).on('click', '.btn-deletenote', function (){
     //         event.preventDefault();

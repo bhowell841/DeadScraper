@@ -46,6 +46,7 @@ app.listen(PORT, function(){
     console.log("Listening on PORT: " + PORT)
 })
 
+// do not touch---------------------
 app.get("/", function(req, res) {
     db.Article.find({})
         .then(function (dbArticle) {
@@ -60,8 +61,8 @@ app.get("/", function(req, res) {
             res.json(err);
         });
 });
-
-
+// ------------------------
+// do not touch
 app.get("/scrape", function(req, res) {
     axios.get("https://deadspin.com/").then(function(data){
 
@@ -87,6 +88,8 @@ app.get("/scrape", function(req, res) {
         res.redirect('/');
     });
 });
+// ------------------------------------------
+
 
 app.get("/articles/:id", function(req, res) {
     db.Article.findOne({_id: req.params.id}).populate("note").then(function(data){
@@ -97,24 +100,26 @@ app.get("/articles/:id", function(req, res) {
     })
 });
 
-app.post("/articles/:id", function(req, res) {
-    db.Note.create(req.body).then(function(data) {
-        
-        return db.Article.findOneAndUpdate({_id: req.params.id}, {$set: {note: data._id}}, { new: true });  
-    }).then(function(data) {
-        res.json(data);
+app.post("/note/:id", function(req, res) {
+    db.Note.create(req.body).then(function(dbNote) {
+        return db.Article.findOneAndUpdate({_id: req.params.id}, {$push: {note: dbNote._id}}, { new: true });  
+    }).then(function(dbArticle) {
+        res.json(dbArticle);
     }).catch(function(err){
-        res.status(500).end();
+        res.json(err);
     })
 });
 
-
-app.put("/removed/:id", function(req, res) {
-    db.Article.findOneAndUpdate({_id: req.params.id}, {$set: {saved: false}})
-    .then(function(data) {
-        res.json(data);
-    })
+app.put("/remove/:id", function (req, res) {
+    db.Article.findOneAndUpdate({ _id: req.params.id }, { isSaved: false })
+        .then(function (data) {
+            res.json(data)
+        })
+        .catch(function (err) {   
+            res.json(err);
+        });
 });
+
 
 app.delete("/articles", function(req, res) {
     db.Article.remove({})
@@ -123,6 +128,7 @@ app.delete("/articles", function(req, res) {
     })
 });
 
+// GOOd Leave Alone
 app.get("/saved", (req, res) => {
     db.Article.find({isSaved: true})
         .then(function (retrievedArticles) {
@@ -133,10 +139,10 @@ app.get("/saved", (req, res) => {
             res.render("savedArticles", hbsObject);
         })
         .catch(function (err) {
-            // If an error occurred, send it to the client
             res.json(err);
         });
 });
+// ====-----=====---=--=-=====---=-=
 
 app.get("/articles", function (req, res) {
     db.Article.find({})
