@@ -1,9 +1,27 @@
-.background-image{
-    background-color: red;
-    background-image: url("../images/deadspin.png");
-    
-}
 
 .card {
     border-bottom: 2px solid black
+}
+body{
+    background-color: #D6D6D6;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.save-btn, .note-btn, .delete-btn{
+    margin-bottom: 10px;
+    background-color: antiquewhite;
+}
+
+#noteInput{
+    width: 300px;
+    height: 100px;
+    margin-left: 15px;
+}
+
+#save-note {
+    margin-left: 5px;
+}
+
+.card-header {
+    background-color: antiquewhite;
 }

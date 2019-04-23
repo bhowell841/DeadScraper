@@ -36,7 +36,7 @@ $(document).ready(function(){
         var container = $("<div>")
         var noteInput = $("<input>").attr("id", "noteInput")
         noteInput.val(text)
-        var saveButton = $("<button>").attr("articleID", id).attr("id", "save-note")
+        var saveButton = $("<button>").attr("articleID", id).attr("id", "save-note").text("Save")
         container.append(noteInput, saveButton)
         $("#note-form").append(container)
 }

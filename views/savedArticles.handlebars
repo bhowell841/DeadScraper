@@ -26,7 +26,7 @@
         <div class="col-12">
             {{#each articles}}
             <div class="card w-90">
-                <div class="card-header text-white bg-primary">
+                <div class="card-header text-white ">
                     <a href={{link}} target="_blank" class="text-white">
                         <h2>{{title}}</h2>
                     </a>
@@ -35,8 +35,8 @@
                     <p class="card-text">
                         {{summary}}
                     </p>
-                    <button data="{{_id}}" class="btn btn-info note-btn">Article Notes</button>
-                    <button data="{{_id}}" class="btn btn-danger delete-btn">Delete From Saved</button>
+                    <button data="{{_id}}" class="btn  note-btn">Article Notes</button>
+                    <button data="{{_id}}" class="btn  delete-btn">Delete From Saved</button>
                 </div>
             </div>
             {{/each}}
