@@ -16,6 +16,7 @@ body{
     width: 300px;
     height: 100px;
     margin-left: 15px;
+    line-height: normal;
 }
 
 #save-note {
@@ -25,3 +26,12 @@ body{
 .card-header {
     background-color: antiquewhite;
 }
+
+.card {
+    background-color: #D6D6D6;
+}
+
+.footer {
+    text-align: center;
+}
+

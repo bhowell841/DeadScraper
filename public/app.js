@@ -34,7 +34,7 @@ $(document).ready(function(){
 // Courtesy of Tom McCarthy my awesome tutor
     function noteFormMaker(text, id){
         var container = $("<div>")
-        var noteInput = $("<input>").attr("id", "noteInput")
+        var noteInput = $("<textarea>").attr("id", "noteInput")
         noteInput.val(text)
         var saveButton = $("<button>").attr("articleID", id).attr("id", "save-note").text("Save")
         container.append(noteInput, saveButton)
