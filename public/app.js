@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-// Good but needs refining
+// Good but needs refining, but I don't have time for that
     $(document).on('click', '#clear-articles', function() {
         $.ajax({
             url: "/articles",
@@ -31,28 +31,43 @@ $(document).ready(function(){
         })
     });
 
-// definately not working 
-    // $(document).on("click", ".note-btn", function(){
-    //     let id = $(this).attr("data");
-    //     console.log("I hit the note button: " + data)
-    //     $('#article-id').text(id);
-    //     $('#save-note').attr('data', id);
-    //     $.ajax(`/articles/${id}`, {
-    //         type: "GET"
-    //     }).then(function (data) {
-    //         console.log(data)
-    //         $('.articles-available').empty();
-    //     $('#note-modal').modal('toggle');
-    // });
-
-// I can't get the modal to even fucking pop
-    $(document).on("click", "#save-note", function(){
-        let id = $(this).attr("id");
+// Courtesy of Tom McCarthy my awesome tutor
+    function noteFormMaker(text, id){
+        var container = $("<div>")
+        var noteInput = $("<input>").attr("id", "noteInput")
+        noteInput.val(text)
+        var saveButton = $("<button>").attr("articleID", id).attr("id", "save-note")
+        container.append(noteInput, saveButton)
+        $("#note-form").append(container)
+}
+// Courtesy of Tom McCarthey my awesome tutor    
+    $(document).on("click", ".note-btn", function(){
+        $("#note-form").empty()
+        let id = $(this).attr("data");
+        console.log("I hit the note button: " + id)
         $.ajax({
-            url: "/articles/" + id,
+            url: "articles/" + id,
+            type: "GET"
+        }).then(function(data){
+            console.log("article from backend", data)
+            if (data.note.length > 0){
+                noteFormMaker(data.note[0].body, id)
+            }else{
+                noteFormMaker("", id)
+            }
+        })
+    });
+
+// Courtesy of Tom McCarthey my awesome tutor
+    $(document).on("click", "#save-note", function(){
+        console.log("save note clicked")
+        let id = $(this).attr("articleID");
+        
+        $.ajax({
+            url: "/note/" + id,
             type: "POST",
             data: {
-                body: $("#note-input")
+            body: $("#noteInput").val()
             }
             }).then(function(res){
                 console.log(res) 

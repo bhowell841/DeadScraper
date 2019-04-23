@@ -1,0 +1,9 @@
+.background-image{
+    background-color: red;
+    background-image: url("../images/deadspin.png");
+    
+}
+
+.card {
+    border-bottom: 2px solid black
+}

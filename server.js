@@ -106,7 +106,7 @@ app.get("/saved", (req, res) => {
 });
 // ====-----=====---=--=-=====---=-=
 
-
+// Lots of Tom love
 app.get("/articles/:id", function(req, res) {
     db.Article.findOne({_id: req.params.id}).populate("note").then(function(data){
         console.log(data);
@@ -116,13 +116,13 @@ app.get("/articles/:id", function(req, res) {
     })
 });
 
+// The help of one Thomas McCarthy
 app.post("/note/:id", function(req, res) {
+    console.log("Hit the note route", req.body)
     db.Note.create(req.body).then(function(dbNote) {
-        return db.Article.findOneAndUpdate({_id: req.params.id}, {$push: {note: dbNote._id}}, { new: true });  
-    }).then(function(dbArticle) {
-        res.json(dbNote);
-    }).catch(function(err){
-        res.json(err);
+        db.Article.findOneAndUpdate({_id: req.params.id}, {$push: {note: dbNote._id}}, { new: true }).then(function(data){
+            console.log("updated article", data)
+        })   
     })
 });
 
